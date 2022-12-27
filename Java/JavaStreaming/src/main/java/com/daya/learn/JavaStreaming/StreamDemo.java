@@ -3,9 +3,10 @@ package com.daya.learn.JavaStreaming;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class StreamDemo {
@@ -19,8 +20,17 @@ public class StreamDemo {
 		//s.mapStream();
 		//s.flatStream();
 		//s.sortedElements();
-		s.sortedComparator();
-		s.sortedStringComparator();
+		//s.sortedComparator();
+		//s.sortedStringComparator();
+		//s.filterAnyMatch();
+		//s.filterAllMatch();
+		//s.filterNoneMatch();
+		//s.streamFilter();
+		//s.findFirstStream();
+		//s.findAnyStream();
+		//s.joinStringReduce(",");
+		//s.joinIntReduce();
+		s.generateStreamingData();
 	}
 	
 	public void mapStream() {
@@ -114,6 +124,140 @@ public class StreamDemo {
 		 */
 	}
 	
+	public void filterAnyMatch() {
+		String[] list = {"washing machine", 
+		                 "Television", 
+		                 "grocery", 
+		                 "essentials", 
+		                 "Laptop",
+		                 "Television", 
+		                 "grocery", 
+		                 "essentials", 
+		                 "Laptop",
+		                 "Television", 
+		                 "grocery", 
+		                 "essentials",
+		                 "Television", 
+		                 "grocery",  
+		                 "Laptop",
+		                 "essentials",
+		                 "Television", 
+		                 "grocery", 
+		                 "essentials",
+		                 "Television", 
+		                 "Laptop",
+		                 "grocery", 
+		                 "essentials",
+		                 "Television", 
+		                 "grocery", 
+		                 "essentials",
+		                 "Laptop"}; 
+        Stream<String> productCategories = Stream.of(list);
+        long before = System.nanoTime();
+        System.out.println(productCategories.anyMatch(e -> e.contains("Laptop")));
+        long after = System.nanoTime();
+        System.out.println(after-before);
+        
+        productCategories = Stream.of(list);
+        
+        before = System.nanoTime();
+        System.out.println(productCategories.filter(e -> e.contains("Laptop")).count()>0);
+        after = System.nanoTime();
+        System.out.println(after-before);
+	}
 	
 	
+	public void filterAllMatch() {
+		Integer[] noArray = {3,4,5,7,9,4}; 
+        Stream<Integer> numbers = Stream.of(noArray);
+        long before = System.nanoTime();
+        System.out.println(numbers.allMatch(e -> e<9));
+        long after = System.nanoTime();
+        System.out.println(after-before);
+        
+	}
+	
+
+	
+	public void filterNoneMatch() {
+		Integer[] noArray = {3,1,5,7,9,11}; 
+        Stream<Integer> numbers = Stream.of(noArray);
+        long before = System.nanoTime();
+        System.out.println(numbers.noneMatch(e -> e%2==0));
+        //System.out.println(numbers.allMatch(e -> e%2!=0));
+        long after = System.nanoTime();
+        System.out.println(after-before);
+        
+	}
+
+	
+	public void streamFilter() {
+		Integer[] noArray = {3,1,5,7,9,11,2,6,4,8,6}; 
+        Stream<Integer> numbers = Stream.of(noArray);
+        long before = System.nanoTime();
+        numbers.filter(e -> e%2==0).forEach(e->System.out.println(e));
+        //System.out.println(numbers.allMatch(e -> e%2!=0));
+        long after = System.nanoTime();
+        System.out.println(after-before);
+        
+	}
+	
+	  public void findFirstStream() {
+	        Stream<String> productCategories = Stream.of(
+	                                                  "washing machine", 
+	                                                  "Television", 
+	                                                  "Laptop", 
+	                                                  "grocery", 
+	                                                  "essentials");
+
+	        Optional<String> category = productCategories.findFirst();
+
+	        if(category.isPresent()) 
+	        	System.out.println(category.get());
+	    }
+	  
+	  public void findAnyStream() {
+	        Stream<String> productCategories = Stream.of(
+	                                                  "washing machine", 
+	                                                  "Television", 
+	                                                  "Laptop", 
+	                                                  "grocery", 
+	                                                  "essentials");
+
+	        Optional<String> category = productCategories.findAny();
+
+	        if(category.isPresent()) 
+	        	System.out.println(category.get());
+	    }
+	
+	  
+	    public void joinStringReduce(final String separator){
+	        String[] strings = { "washing machine", 
+                    "Television", 
+                    "Laptop", 
+                    "grocery", 
+                    "essentials"};
+	        
+	        Optional<String> joined = Arrays.stream(strings).reduce((a,b)->!"".equals(a)?a+separator+b:b);
+	        if(joined.isPresent()) {
+	        	System.out.println(joined.get());
+	        }
+	    }
+	    
+	    public void joinIntReduce(){
+	    	Integer[] noArray = {3,1,5,7,9,11,2,6,4,8,6}; 
+	        
+	        Optional<Integer> joined = Arrays.stream(noArray).reduce((a,b)->a+b);
+	        if(joined.isPresent()) {
+	        	System.out.println(joined.get());
+	        }
+	    }
+	    
+	    
+	    public void generateStreamingData(){
+	        Stream.generate(()->UUID.randomUUID().toString())
+	        .limit(10)
+	        .forEach(System.out::println);
+	    }
 }
+
