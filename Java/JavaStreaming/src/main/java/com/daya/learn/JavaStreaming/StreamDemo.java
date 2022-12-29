@@ -30,7 +30,9 @@ public class StreamDemo {
 		//s.findAnyStream();
 		//s.joinStringReduce(",");
 		//s.joinIntReduce();
-		s.generateStreamingData();
+		//s.generateStreamingData();
+		//s.iterateStreamingData();
+		s.parallelStream();
 	}
 	
 	public void mapStream() {
@@ -258,6 +260,31 @@ public class StreamDemo {
 	        Stream.generate(()->UUID.randomUUID().toString())
 	        .limit(10)
 	        .forEach(System.out::println);
+	    }
+	    
+	    public void iterateStreamingData() {
+	    	Stream<Double> evenNumStream = Stream.iterate(2.0, e -> Math.pow(e, 2.0));
+	    	evenNumStream.limit(8).forEach(System.out::println);
+	    	
+	    	Stream<Integer> evenNumStream1 = Stream.iterate(1, e -> e+e);
+	    	evenNumStream1.limit(8).forEach(System.out::println);
+	    			
+	    }
+	    
+	    public void parallelStream() {
+	    	List<Integer> listOfNumbers = Arrays.asList(1, 2, 3, 4,1, 2, 3, 4,1, 2, 3, 4,1, 2, 3, 4);
+	    	long before = System.nanoTime();
+	    	listOfNumbers.stream().forEach(number ->
+	    	    System.out.println(number + " " + Thread.currentThread().getName()));
+	    	long after = System.nanoTime();
+	        System.out.println(after-before);
+	    	
+	    	
+	        before = System.nanoTime();
+	        listOfNumbers.stream().parallel().forEach(number ->
+    	    System.out.println(number + " " + Thread.currentThread().getName()));
+	        after = System.nanoTime();
+	        System.out.println(after-before);
 	    }
 }
 
